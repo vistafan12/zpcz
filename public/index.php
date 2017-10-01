@@ -41,6 +41,13 @@ $mode_id = str_replace('/', '', $_SERVER['REQUEST_URI']);
             outline: none;
             max-width: 800px;
         }
+	 h5 {
+	color: #888888;
+	}
+	    
+         h6 {
+	color: #888888;
+	}
 
         label.uploadCover {
             display: block;
