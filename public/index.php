@@ -1,10 +1,10 @@
 <?php
 $config = [
     'storage_directory' => __DIR__ . '/files/',
-    'max_size' => 5000000,
-    'db_dsn' => 'mysql:host=localhost;dbname=vidox',
-    'db_user' => 'root',
-    'db_pass' => 'root'
+    'max_size' => 50000000000, 
+    'db_dsn' => 'mysql:host=;dbname=',
+    'db_user' => '',
+    'db_pass' => ''
 ];
 
 try {
@@ -17,12 +17,12 @@ try {
 $mode_id = str_replace('/', '', $_SERVER['REQUEST_URI']);
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Vidox</title>
+    <title>zpcz.eu</title>
     <link rel="stylesheet" href="https://bootswatch.com/cyborg/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -68,12 +68,12 @@ $mode_id = str_replace('/', '', $_SERVER['REQUEST_URI']);
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/">vidox</a>
+            <a class="navbar-brand" href="/">zpcz.eu</a>
         </div>
 
         <div class="collapse navbar-collapse" id="main-nav-collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="/upload"><span class="glyphicon glyphicon-upload"></span> Upload</a></li>
+                <li><a href="/upload"><span class="glyphicon glyphicon-upload"></span> Dodaj</a></li>
             </ul>
         </div>
     </div>
@@ -89,22 +89,20 @@ $mode_id = str_replace('/', '', $_SERVER['REQUEST_URI']);
                 $fType = pathinfo($tFile, PATHINFO_EXTENSION);
                 $target_file = $target_file . '.' . $fType;
 
-                // Check file exists
                 if (file_exists($target_file)) {
-                    die('Sorry, file already exists.');
+                    die('Ten film istnieje w naszej bazie danych.');
                 }
 
-                // Check size is less than specified size
                 if ($_FILES['upload']['size'] > $config['max_size']) {
-                    die('Sorry, your file is too large.');
+                    die('Ten film waży za dużo!');
                 }
 
-                if ($fType != 'mp4' && $fType != 'mkv') {
-                    die('Sorry, only MP4 and MKV files are allowed.');
+                if ($fType != 'mp4' && $fType != 'mkv' && $fType != 'wmv') {
+                    die('Przepraszamy, tylko MP4, MVP i WMV jest dozwolony.');
                 }
                 if (move_uploaded_file($_FILES['upload']['tmp_name'], $target_file)) {
                     if (!($stmt = $db->prepare('INSERT INTO `videos` (`hash`, `type`, `added`) VALUES (:hash, :type, :added)'))) {
-                        echo 'Prepare failed: (' . $db->errorCode() . ') ' . $db->error;
+                        echo 'Wystąpił błąd: (' . $db->errorCode() . ') ' . $db->error;
                     }
 
                     $dateNow = date('Y-m-d H:i:s');
@@ -114,11 +112,11 @@ $mode_id = str_replace('/', '', $_SERVER['REQUEST_URI']);
                     $stmt->bindParam(':added', $dateNow, \PDO::PARAM_STR);
 
                     if ($stmt->execute()) {
-                        die('<span>Successfully uploaded video with ID `<a href="/' . $new_id . '">' . $new_id . '</a>`');
+                        die('<span>Udało się zuploadować twój film z ID `<a href="/' . $new_id . '">' . $new_id . '</a>`');
                     }
                 }
 
-                die('Sorry, there was an error uploading your file.');
+                die('Przepraszamy, ale znależliśmy błąd w twoim pliku.');
             } else {
                 ?>
                 <form action="" method="POST" enctype="multipart/form-data">
@@ -126,11 +124,11 @@ $mode_id = str_replace('/', '', $_SERVER['REQUEST_URI']);
                         <label for="uploadInput" class="uploadCover btn btn-default">
                             <input class="uploadinput" type="file" style=" height: 0; width: 0;" name="upload"
                                    id="uploadInput">
-                            <span><span class="glyphicon glyphicon-upload"></span> Select Video</span>
+                            <span><span class="glyphicon glyphicon-upload"></span> Wybierz filmik do wysłania</span>
                         </label>
                     </div>
                     <div class="form-group">
-                        <input type="submit" class="btn btn-default" value="Upload"/>
+                        <input type="submit" class="btn btn-default" value="Dodaj"/>
                     </div>
                 </form>
                 <?php
@@ -139,13 +137,13 @@ $mode_id = str_replace('/', '', $_SERVER['REQUEST_URI']);
             ?>
             <?php
             if (!($stmt = $db->prepare('SELECT * FROM `videos` WHERE `hash` = :hash'))) {
-                echo 'Prepare failed: (' . $db->errorCode() . ') ' . $db->error;
+                echo 'Bład: (' . $db->errorCode() . ') ' . $db->error;
             }
             if (!$stmt->bindParam(':hash', $mode_id, \PDO::PARAM_STR)) {
-                echo 'Binding parameters failed: (' . $stmt->errorCode() . ') ' . $stmt->errorInfo()[2];
+                echo 'Parametry bitratowe są złe: (' . $stmt->errorCode() . ') ' . $stmt->errorInfo()[2];
             }
             if (!$stmt->execute()) {
-                echo 'Execute failed: (' . $stmt->errorCode() . ') ' . $stmt->errorInfo()[2];
+                echo 'Błąd: (' . $stmt->errorCode() . ') ' . $stmt->errorInfo()[2];
             }
 
             if ($video = $stmt->fetch(\PDO::FETCH_OBJ)) {
@@ -153,7 +151,7 @@ $mode_id = str_replace('/', '', $_SERVER['REQUEST_URI']);
                     ?>
                     <video class="main-vid" controls>
                         <source src="/files/<?= $video->hash . '.' . $video->type ?>" type="video/<?= $video->type ?>">
-                        <p>Your browser does not support <?= $video->type ?>.</p>
+                        <p>Twoja przeglądarka nie wspiera <?= $video->type ?>.</p>
                     </video>
                     <?php
 
@@ -162,14 +160,16 @@ $mode_id = str_replace('/', '', $_SERVER['REQUEST_URI']);
                 ?>
                 <div class="text-center">
                     <h1>404</h1>
-                    <h2>This video's ID could not be found.</h2>
+                    <h2>Ten film nie istnieje!</h2>
                 </div>
                 <?php
             }
         } else {
             ?>
             <div class="container well">
-                <input title="Search" id="id" type="text" name="id" class="big-search" autocomplete="off"/>
+			<center><h3>zpcz.eu to prywatny hosting filmów - nie musisz martwić się o ich usunięcie.</h3></center><br>
+			<center><h5>Kontakt: <a href="mailto:kontakt@zpcz.eu">kontakt@zpcz.eu</a> <br />Sprawy dot. praw autorskich: <a href="mailto:dmca@zpcz.eu">dmca@zpcz.eu</a></h5></center><br>
+                <input title="Szukaj" id="id" type="text" name="id" class="big-search" autocomplete="off"/>
                 <script type="text/javascript">
                     $('#id').keypress(function () {
                         if (event.which == 13) {
@@ -178,6 +178,7 @@ $mode_id = str_replace('/', '', $_SERVER['REQUEST_URI']);
                         }
                     });
                 </script>
+				<center><h6>zpcz ❤ <a href="https://github.com/vistafan12/zpcz">src</a></h6></center>
             </div>
             <?php
         }
