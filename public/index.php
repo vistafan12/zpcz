@@ -26,6 +26,10 @@ $mode_id = str_replace('/', '', $_SERVER['REQUEST_URI']);
     <link rel="stylesheet" href="https://bootswatch.com/cyborg/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link href="https://zpcz.eu/scripts/jquery.adi.css" rel="stylesheet" type="text/css">
+    <script src="https://zpcz.eu/scripts/jquery.adi.js"></script>
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/animate.css/3.4.0/animate.min.css">
+    <script src="https://zpcz.eu/scripts/advertisement.js"></script>
     <style type="text/css">
         .big-search {
             padding-bottom: 0;
