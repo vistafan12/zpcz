@@ -1,5 +1,3 @@
 # zpcz
 
-A vidox fork for Polish users.
-
-Demo [here](https://zpcz.eu).
+Prywatny hosting plików bazowany na [vidox](https://github.com/owenvoke/vidox).
