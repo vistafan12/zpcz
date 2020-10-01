@@ -206,7 +206,7 @@ $mode_id = str_replace('/', '', $_SERVER['REQUEST_URI']);
                         <label for="uploadInput" class="uploadCover btn btn-default">
                             <input class="uploadinput" type="file" style=" height: 0; width: 0;" name="upload"
                                    id="uploadInput">
-                            <span><span class="glyphicon glyphicon-upload"></span> Wybierz filmik do wysłania</span>
+                            <span><span class="glyphicon glyphicon-upload"></span> Wybierz film do wysłania</span>
                         </label>
                     </div>
                     <div class="form-group">
@@ -304,18 +304,18 @@ $mode_id = str_replace('/', '', $_SERVER['REQUEST_URI']);
                     <input type="password" name="password" class="form-control"/>
                 </div>
                 <div class="form-group">
-                    <label for="">E-mail</label>
+                    <label for="">E-Mail</label>
                     <input type="text" name="email" class="form-control"/>
                 </div>
                 <div class="form-group">
-                    <input type="submit" name="register" class="btn btn-default" value="Zarejestruj"/>
+                    <input type="submit" name="register" class="btn btn-default" value="Zarejestruj się"/>
                 </div>
             </form>
             <a href="/login"> Masz konto? Zaloguj się </a>
         </div>
     <? } 
     if ($mode_id == 'profile') { 
-            if(isset($_SESSION['username']) == null) {
+            if(!isset($_SESSION['username'])) {
                 header('location:/login');
             }
         ?>
@@ -323,7 +323,7 @@ $mode_id = str_replace('/', '', $_SERVER['REQUEST_URI']);
             <h3> Twój profil </h3>
             <center><small><i>(psst. tylko ty możesz zobaczyć tą stronę. jestem (vistafan12) leniem i nie chce mi się robić profilu publicznego dla każdego usera)</i></small></center>
             <h4> Dodane przez ciebie filmy: </h4>
-            <? user_videos_ZPCZ($_SESSION['username']) ?>
+            <?= user_videos_ZPCZ($_SESSION['username']) ?>
     </div>
 <? } ?>
 </div>
